@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions)
 
   const path = request.nextUrl.pathname
+
   if (session.isLoggedIn && !path.startsWith('/todos')) {
     return NextResponse.redirect(new URL('/todos', request.url))
   }
@@ -15,7 +16,7 @@ export async function middleware(request: NextRequest) {
   if (!session.isLoggedIn && path.startsWith('/todos')) {
     return NextResponse.redirect(new URL('/', request.url))
   }
-  return NextResponse.next()
+  //return NextResponse.next()
   ///return NextResponse.redirect(new URL("/", request.url));
 }
 
