@@ -10,11 +10,13 @@ import { useForm } from '@mantine/form'
 import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import TodosCreateModal from './TodosCreateModal'
 import { initialState, TodoContext } from '@/context/TodosContext'
+import { useRouter } from 'next/navigation'
 
 const todoService = new ToDoService()
 
 export default function TodosPage() {
   const [opened, { open, close }] = useDisclosure(false)
+  const router = useRouter()
 
   const updateTodo = useContext(TodoContext)
 
@@ -23,7 +25,7 @@ export default function TodosPage() {
     return data
   }
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch, isError } = useQuery({
     queryKey: ['todos'],
     queryFn: fetchTodo,
     refetchOnWindowFocus: true
@@ -50,6 +52,10 @@ export default function TodosPage() {
     updateTodo.setTodo({ ...values })
     open()
   }
+
+  useEffect(() => {
+    router.push('/')
+  }, [isError])
 
   return (
     <main className="p-5">
